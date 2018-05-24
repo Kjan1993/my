@@ -1,0 +1,123 @@
+=== pom.xml 
++ 버전수정
+<properties>
+	<java-version>1.8</java-version>
+	<org.springframework-version>4.1.2.RELEASE</org.springframework-version>
+	<org.aspectj-version>1.6.10</org.aspectj-version>
+	<org.slf4j-version>1.6.6</org.slf4j-version>
+</properties>
+
++ ojdbc6 maven 추가
+
++ ojdbc6 repository 추가
+<repositories>
+	<repository>
+		<id>ojdbc6.driver</id>
+		<url>http://www.datanucleus.org/downloads/maven2/</url>
+	</repository>
+</repositories>
+
++ commons-dbcp2 maven 추가
+
+
+
+=== root-context, servlet-context파일 src/main/resources/context 로 이동 후 src/main/webapp/web.xml에서 위치 경로 수정
+(자주 편집해야하므로 이동을 간편하게 하기위해 옮김)
++ classpath:context/root-context.xml
+
++ classpath:context/servlet-context.xml
+
+
+
+=== root-context.xml 
++ Namespaces - p: 추가
+
++ bean추가
+<bean id="dataSource"
+	class="org.apache.commons.dbcp2.BasicDataSource"
+	p:driverClassName="oracle.jdbc.driver.OracleDriver"
+	p:url="jdbc:oracle:thin:@localhost:1521:XE"
+	p:username="spring"
+	p:password="spring"
+	/>
+
+
+
+=== pom.xml
++ mybatis maven추가
+
++ mybatis-spring maven 추가
+
+
+
+=== root-context.xml
++bean 추가
+<bean id="sqlSessionFactory"
+	  class="org.mybatis.spring.SqlSessionFactoryBean"
+	  p:dataSource-ref="dataSource"
+	  p:configLocation="classpath:mybatis/sqlConfig/sqlConfig.xml"
+	  p:mapperLocations="classpath:mybatis/s**/*-Mapper.xml"
+	  />
+
+
+
+=== sqlConfig.xml
++ src/main/resources/mybatis/sqlConfig/sqlConfig.xml 생성
+
++ DOCTYPE 추가
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
++ typeAlias 추가
+<configuration>
+	<typeAliases>
+		<typeAlias type="java.lang.String" alias="str"/>
+		<typeAlias type="java.lang.Integer" alias="int"/>
+		<typeAlias type="java.lang.BoardVO" alias="board"/>
+	</typeAliases>
+</configuration>
+
+
+
+=== BoardVO.java
++ src/main/java > com.board.dto > BoardVO.java 생성
+
+
+
+=== Board-Mapper.xml
++ src/main/resources/mybatis/sqlMapper/Board-Mapper.xml 생성
+
++ DCOTYPE추가
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
++ sql문 작성
+
+
+
+=== BoardDAO.java (interface)
+
+
+
+=== BoardDAOImpl.java
+
+
+
+=== root-context.xml
++ Namespaces - c: 추가
+
++ bean추가
+<bean id="sqlSession"
+	  class="org.mybatis.spring.SqlSessionTemplate"
+	  c:sqlSessionFactory-ref="sqlSessionFactory"
+	  />
+<bean id="boardDAO"
+	  class="com.spring.dao.BoardDAOImpl"
+	  p:session="sqlSession"
+	  />	
+
+
+
+===
+

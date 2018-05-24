@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="BoardMapper">
+	<select id="selectBoardList" resultType="board">
+		select *
+		from tbl_board
+		order by bno desc
+	</select>
+  	
+  	<select id="selectBoardByID" resultType="board">
+  		select *
+  		from tbl_board
+  		where bno=#{bno}
+  	</select>
+  	
+  	<update id="insertBoard">
+  		insert into tbl_board(bno,title,content,writer)
+  		values(board_seq.nextval,#{title},#{content},#{writer})
+  	</update>
+	
+	<update id="updateBoard">
+		update tbl_board
+  		set title=#{title},content=#{content},writer=#{writer}
+  		where bno=#{bno}
+	</update>
+	
+	<update id="deleteBoard">
+		delete from tbl_board
+		where bno=#{bno}
+	</update>
+	
+	<update id="increaseViewcnt" >
+		update tbl_board set viewcnt=viewcnt+1
+		where bno=#{bno}
+	</update>
+	
+	<!-- Paging -->
+	<select id="totalCountBoard" resultType="int">
+		select count(*) from tbl_board
+	</select>
+</mapper>
